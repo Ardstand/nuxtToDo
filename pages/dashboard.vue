@@ -1,5 +1,5 @@
 <!--use frontend components of Vuetify to create a simple dashboard-->
-<template>
+<template onload="createID()">
   <v-container>
     <v-row>
       <v-col cols="12" sm="6" md="4">
@@ -12,18 +12,16 @@
                 <v-list-item-title class="title">Your ToDo List</v-list-item-title>
                 <v-list-item-subtitle>
                   <v-list>
-                    <v-list-item v-for="todo in todos" :key="todo.title">
-                      <v-list-item-content>
-                        <v-list-item-title>{{ todo.title }}</v-list-item-title>
-                      </v-list-item-content>
-                      <v-list-item-action>
-                        <v-checkbox
+                      <v-list-item v-for="(todo, index) in todos" :key="index">
+                          <v-list-item-title>[{{index+1}}] {{ todo.title }}</v-list-item-title>
+                          <v-checkbox
                           v-model="todo.completed"
                           color="green"
                           hide-details
                         ></v-checkbox>
+                     </v-list-item>
+                      <v-list-item-action>
                       </v-list-item-action>
-                    </v-list-item>
                   </v-list>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -33,16 +31,25 @@
                 <v-icon>mdi-plus</v-icon>
                     </v-btn>
                     <v-text-field
-                                    v-if="showForm"
+                            v-if="showForm"
                             v-model="newTodo"
                             label="Add Todo"
                             single-line
                             hide-details
                         ></v-text-field>
                  </form>
-                <v-btn icon @click="removeTodo">
+              <form @submit.prevent="removetodo">
+            <v-btn icon @click="removetodo">
           <v-icon>mdi-minus</v-icon>
         </v-btn>
+        <v-text-field
+          v-if="showFormID"
+          v-model="removeTodo"
+          label="Enter ID to remove"
+          single-line
+          hide-details>
+        </v-text-field>
+        </form>
           </v-card-text>
         </v-card>
       </v-col>
@@ -70,7 +77,9 @@ export default {
         }
       ],
         showForm: false,
+        showFormID: false,
         newTodo: "",
+        removeTodo: 0,
     };
   },
 
@@ -82,12 +91,24 @@ methods: {
         title: this.newTodo,
         completed: false
       });
+      this.newTodo = "";
+      this.showForm = false;
     }
   },
 
-    removeTodo() {
-      var todoPosition = this.todos.indexOf(todo);
-      this.todos.splice(todoPosition, 1);
+    removetodo() {
+      this.showFormID = true;
+      if(this.removeTodo){
+      this.todos.splice(this.removeTodo-1, 1);
+      this.removeTodo = "";
+      this.showFormID = false;
+      }
+    },
+
+    showTodo() {
+      return this.todos.map((todo, index) => {
+        return `${index} - ${todo.title}`;
+      });
     }
 }
 };
