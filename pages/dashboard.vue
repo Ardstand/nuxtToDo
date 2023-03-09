@@ -1,5 +1,5 @@
 <!--use frontend components of Vuetify to create a simple dashboard-->
-<template onload="createID()">
+<template>
   <v-container>
     <v-row>
       <v-col cols="12" sm="6" md="4">
@@ -20,8 +20,6 @@
                           hide-details
                         ></v-checkbox>
                      </v-list-item>
-                      <v-list-item-action>
-                      </v-list-item-action>
                   </v-list>
                 </v-list-item-subtitle>
               </v-list-item-content>
@@ -99,11 +97,16 @@ methods: {
     removetodo() {
       this.showFormID = true;
       if(this.removeTodo){
+      if (Number.isInteger(this.removeTodo) && this.removeTodo > 0 && this.removeTodo <= this.todos.length){
       this.todos.splice(this.removeTodo-1, 1);
       this.removeTodo = "";
       this.showFormID = false;
       }
-    },
+      else{
+        alert("Please enter a valid ID");
+      }
+    }
+  },
 
     showTodo() {
       return this.todos.map((todo, index) => {
