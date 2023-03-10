@@ -10,18 +10,27 @@
               <v-list-item-content>
                 <v-list-item-title class="title">Welcome to the Dashboard</v-list-item-title>
                 <v-list-item-title class="title">Your ToDo List</v-list-item-title>
-                <v-list-item-subtitle>
-                  <v-list>
-                      <v-list-item v-for="(todo, index) in todos" :key="index">
-                          <v-list-item-title>[{{index+1}}] {{ todo.title }}</v-list-item-title>
-                          <v-checkbox
-                          v-model="todo.completed"
-                          color="green"
-                          hide-details
-                        ></v-checkbox>
-                     </v-list-item>
-                  </v-list>
-                </v-list-item-subtitle>
+              <!--add a search bar-->
+              <form>
+                <v-text-field
+                  v-model="search"
+                  append-icon="mdi-magnify"
+                  label="Search"
+                  single-line
+                  hide-details
+                ></v-text-field>
+                <!--use text entered in search bar to display todo matching the search-->
+                <v-list-item v-for="todo in searchTodo()" :key="todo.title">
+                  <v-list-item-content>
+                    <v-list-item-title font-weight="bold" >[{{todos.indexOf(todo)+1}}] {{ todo.title }}</v-list-item-title>
+                    <v-list-item-subtitle>{{ todo.description }}</v-list-item-subtitle>
+                    <v-checkbox
+                      v-model="todo.completed"
+                      :label="todo.completed ? 'Completed' : 'Not Completed'"
+                    ></v-checkbox>
+                  </v-list-item-content>
+                </v-list-item>
+              </form>
               </v-list-item-content>
             </v-list-item>
             <form @submit.prevent="addtodo">
@@ -32,6 +41,14 @@
                             v-if="showForm"
                             v-model="newTodo"
                             label="Add Todo"
+                            single-line
+                            hide-details
+                        ></v-text-field>
+                        <!--another form for description-->
+                        <v-text-field
+                            v-if="showForm"
+                            v-model="newTodoDesc"
+                            label="Add Description"
                             single-line
                             hide-details
                         ></v-text-field>
@@ -50,12 +67,15 @@
         </form>
           </v-card-text>
         </v-card>
+        <v-btn @click="save">Save</v-btn>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import { watch } from 'vue';
+
 export default {
   data() {
     return {
@@ -63,41 +83,53 @@ export default {
       todos: [
         {
           title: "Learn Vue.js",
+          description: "Learn Vue.js and build a simple ToDo app",
           completed: false
         },
         {
           title: "Learn Nuxt.js",
+          description: "Learn Nuxt.js and build a simple ToDo app",
           completed: false
         },
         {
           title: "Learn Vuetify",
+          description: "Learn Vuetify and build a simple ToDo app",
           completed: false
         }
       ],
         showForm: false,
         showFormID: false,
         newTodo: "",
-        removeTodo: 0,
+        removeTodo: "",
+        search: "",
     };
   },
 
 methods: {
   addtodo() {
     this.showForm = true;
-    if (this.newTodo) {
-      this.todos.push({
-        title: this.newTodo,
-        completed: false
-      });
-      this.newTodo = "";
-      this.showForm = false;
+    if (!this.newTodo.trim() || !this.newTodoDesc.trim()) {
+      return
     }
-  },
+      if(this.newTodo.length > 0 && this.newTodoDesc.length > 0){
+        this.todos.push({
+        title: this.newTodo,
+        description: this.newTodoDesc,
+        completed: false
+        });
+        this.newTodo = "";
+        this.newTodoDesc = "";
+        this.showForm = false;
+        } else {
+            alert("Please enter a valid title and description");
+        }
+    },
 
     removetodo() {
       this.showFormID = true;
       if(this.removeTodo){
-      if (Number.isInteger(this.removeTodo) && this.removeTodo > 0 && this.removeTodo <= this.todos.length){
+        this.removeTodo = parseInt(this.removeTodo);  
+      if (this.removeTodo > 0 && this.removeTodo <= this.todos.length){
       this.todos.splice(this.removeTodo-1, 1);
       this.removeTodo = "";
       this.showFormID = false;
@@ -112,7 +144,34 @@ methods: {
       return this.todos.map((todo, index) => {
         return `${index} - ${todo.title}`;
       });
+    },
+
+    searchTodo() {
+      if (!this.search) {
+        return this.todos;
+      }
+      this.search = this.search.toString();
+      let matchTodos = [];
+      for(let i = 0; i < this.todos.length; i++){
+        if(this.todos[i].title.includes(this.search)){
+          matchTodos.push(this.todos[i]);
+        }
+      }
+      return matchTodos;
+    },
+
+    save() {
+      //to-do save as user.json
+    },
+  },
+
+  watch: {
+    todos: {
+      handler: function (todos) {
+        localStorage.setItem("todos", JSON.stringify(todos));
+      },
+      deep: true
     }
-}
+  },
 };
 </script>
