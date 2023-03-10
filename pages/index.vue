@@ -14,6 +14,35 @@
     </form>
   </template>
 
+<style>
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+}
+input {
+  margin: 10px;
+  border: black solid 1px;
+  border-radius: 5px;
+}
+button {
+  margin: 10px;
+  border: black solid 1px;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+</style>
+
 <script>
 import { auth } from "../plugins/firebase";
 

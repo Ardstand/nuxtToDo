@@ -1,0 +1,18 @@
+{
+    "emmanuel.smiju16525@gmail.com":{
+        "name":"Emmanuel Smiju",
+        "pass":"f0e65975ed9a43805b030b5e0d4af83239a652b1ddd7fa26b108424e19f48676",
+        "todo":{
+            "1":{
+                "title":"Title",
+                "Completed":false,
+                "date":"Date"
+            },
+            "2":{
+                "title":"Title",
+                "Completed":true,
+                "date":"Date"
+            }
+        }
+    }
+}
