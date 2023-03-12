@@ -91,3 +91,6 @@ sw.*
 
 # Config folder
 config
+
+# Test files
+_*

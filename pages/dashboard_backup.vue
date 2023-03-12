@@ -74,42 +74,37 @@
 </template>
 
 <script>
+import { watch } from 'vue';
 
 export default {
   data() {
     return {
-//       //create a simple ToDo list for logged in user
-      // todos: [
-      //   {
-      //     title: "Learn Vue.js",
-      //     description: "Learn Vue.js and build a simple ToDo app",
-      //     completed: false
-      //   },
-      //   {
-      //     title: "Learn Nuxt.js",
-      //     description: "Learn Nuxt.js and build a simple ToDo app",
-      //     completed: false
-      //   },
-      //   {
-      //     title: "Learn Vuetify",
-      //     description: "Learn Vuetify and build a simple ToDo app",
-      //     completed: false
-      //   }
-      // ],
+      //create a simple ToDo list for logged in user
+      todos: [
+        {
+          title: "Learn Vue.js",
+          description: "Learn Vue.js and build a simple ToDo app",
+          completed: false
+        },
+        {
+          title: "Learn Nuxt.js",
+          description: "Learn Nuxt.js and build a simple ToDo app",
+          completed: false
+        },
+        {
+          title: "Learn Vuetify",
+          description: "Learn Vuetify and build a simple ToDo app",
+          completed: false
+        }
+      ],
         showForm: false,
         showFormID: false,
         newTodo: "",
         removeTodo: "",
         search: "",
-        todos: this.$store.state.todos
     };
   },
-// computed: {
-//     // Instead of using the data from state.todos, use the data from state.todos
-//     todos() {
-//       return this.$store.state.todos;
-//     }
-//   },
+
 methods: {
   addtodo() {
     this.showForm = true;
@@ -146,14 +141,9 @@ methods: {
   },
 
     showTodo() {
-      if (this.todos.length > 0) {
-        return this.todos.map((todo, index) => {
-          return `${index} - ${todo.title}`;
+      return this.todos.map((todo, index) => {
+        return `${index} - ${todo.title}`;
       });
-    }
-      else {
-        return "No todos";
-    }
     },
 
     searchTodo() {
@@ -186,68 +176,3 @@ methods: {
 };
 </script>
 
-
-
-<!-- <script>
-import { mapState, mapActions } from 'vuex';
-
-export default {
-  computed: {
-    ...mapState(['todos']),
-  },
-  data: () => ({
-    newTodo: '',
-    newTodoDesc: '',
-    removeTodo: '',
-    showForm: false,
-    showFormID: false,
-    search: '',
-  }),
-  methods: {
-    ...mapActions(['addTodo', 'removeTodo', 'updateTodo']),
-    addtodo() {
-      this.showForm = !this.showForm;
-      if (this.showForm === false) {
-        if (this.newTodo.trim() !== '') {
-          const newtodo = {
-            title: this.newTodo,
-            description: this.newTodoDesc,
-            completed: false,
-          };
-          this.addTodo({
-            todo: newtodo,
-          });
-          this.newTodo = '';
-          this.newTodoDesc = '';
-        }
-      }
-    },
-    removetodo() {
-      this.showFormID = !this.showFormID;
-      if (this.showFormID === false) {
-        if (this.removeTodo.trim() !== '') {
-          const index = parseInt(this.removeTodo) - 1;
-          if (index >= 0 && index < this.todos.length) {
-            this.removeTodo({
-              todo: this.todos[index],
-            });
-          }
-          this.removeTodo = '';
-        }
-      }
-    },
-    save() {
-      this.todos.forEach((todo) => {
-        this.updateTodo({
-          todo,
-        });
-      });
-    },
-    searchTodo() {
-      return this.todos.filter((todo) =>
-        todo.title.toLowerCase().includes(this.search.toLowerCase())
-      );
-    },
-  },
-};
-</script> -->

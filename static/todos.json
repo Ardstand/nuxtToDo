@@ -1,0 +1,16 @@
+{
+    "emmanuel.smiju16525@gmail.com":{
+        "name":"Emmanuel Smiju",
+        "todo":[{
+                "title":"Title 1",
+                "Completed":false,
+                "description":"Description for 1"
+            },
+            {
+                "title":"Title 2",
+                "Completed":true,
+                "description":"Description for 2"
+            }
+        ]
+    }
+}
