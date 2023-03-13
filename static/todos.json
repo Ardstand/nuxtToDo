@@ -1,16 +1,1 @@
-{
-    "emmanuel.smiju16525@gmail.com":{
-        "name":"Emmanuel Smiju",
-        "todo":[{
-                "title":"Title 1",
-                "Completed":false,
-                "description":"Description for 1"
-            },
-            {
-                "title":"Title 2",
-                "Completed":true,
-                "description":"Description for 2"
-            }
-        ]
-    }
-}
+{"emmanuel.smiju16525@gmail.com":{"name":"Emmanuel Smiju","todo":[{"title":"Title 1","ompleted":false,"description":"Description for 1"},{"title":"Title 2","completed":true,"description":"Description for 2"}]},"leledeadpool@gmail.com":{"name":"Vash Motwani","todo":[{"title":"Hello","description":"world","completed":false}]}}
