@@ -1,13 +1,13 @@
 <!--index file for project-->
 <template>
-  <form @submit.prevent="PageLogin">
+  <form @submit.prevent="PageLogin" id="login">
     <label>
       Email:
-      <input ref="email" type="text" />
+      <input ref="email" type="text" id="email-input"/>
     </label>
     <label>
       Password:
-      <input ref="password" type="password" />
+      <input ref="password" type="password" id="email-input"/>
     </label>
     <button type="submit">Login</button>
     <textarea ref="error"></textarea>
@@ -15,7 +15,7 @@
 </template>
 
 <style>
-form {
+#login {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -29,7 +29,7 @@ label {
   justify-content: center;
   margin: 10px;
 }
-input {
+#email-input {
   margin: 10px;
   border: black solid 1px;
   border-radius: 5px;
