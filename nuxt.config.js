@@ -40,6 +40,10 @@ export default {
     { src: '~/plugins/firebase.js', mode: 'client' },
   ],
 
+  serverMiddleware: [
+    { path: '/api/new', handler: '~/api/new.js' },
+    { path: '/api/todos', handler: '~/api/todos.js'}
+  ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
