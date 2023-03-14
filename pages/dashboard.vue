@@ -10,6 +10,12 @@
                 <v-list-item-content>
                   <v-list-item-title class="title">Welcome to the Dashboard</v-list-item-title>
                   <v-list-item-title class="title">Your ToDo List</v-list-item-title>
+                  <v-select
+                    v-model="filter"
+                    :items="['all', 'completed', 'not completed']"
+                    label="Filter"
+                    :value="'all'"
+                  ></v-select>
                 <!--add a search bar-->
                 <form>
                   <v-text-field
@@ -86,6 +92,7 @@
           newTodoDesc: "",
           removeTodo: "",
           search: "",
+          filter: "",
           todos: this.$store.state.todos
       };
     },
@@ -149,19 +156,24 @@
       }
     },
 
-      searchTodo() {
-        if (!this.search) {
-          return this.todos;
+    searchTodo() {
+      let filteredTodos = this.todos;
+      if (this.filter === 'completed') {
+        filteredTodos = filteredTodos.filter(todo => todo.completed);
+        } else if (this.filter === 'not completed') {
+          filteredTodos = filteredTodos.filter(todo => !todo.completed);
         }
-        this.search = this.search.toString();
+      if (this.search) {
         let matchTodos = [];
-        for(let i = 0; i < this.todos.length; i++){
-          if(this.todos[i].title.toLowerCase().includes(this.search.toLowerCase())){
-            matchTodos.push(this.todos[i]);
-          }
+        for (let i = 0; i < filteredTodos.length; i++) {
+        if (filteredTodos[i].title.toLowerCase().includes(this.search.toLowerCase())) {
+          matchTodos.push(filteredTodos[i]);
         }
-        return matchTodos;
-      },
+      }
+      return matchTodos;
+    }
+  return filteredTodos;
+},
 
       markComplete(todo) {
           //use axios to search for the todo and update the completed status
@@ -177,7 +189,7 @@
             todo.completed = todo.completed;
           });
   },
-    },
+}
   };
   </script>
 
