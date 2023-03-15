@@ -2,7 +2,7 @@
   <template>
     <v-container>
       <v-row>
-        <v-col cols="12" sm="6" md="4">
+        <v-col>
           <v-card>
             <v-card-title class="headline">Dashboard</v-card-title>
             <v-card-text>
@@ -10,26 +10,27 @@
                 <v-list-item-content>
                   <v-list-item-title class="title">Welcome to the Dashboard</v-list-item-title>
                   <v-list-item-title class="title">Your ToDo List</v-list-item-title>
-                  <v-select
-                    v-model="filter"
-                    :items="['all', 'completed', 'not completed']"
-                    label="Filter"
-                    :value="'all'"
-                  ></v-select>
+                    <v-combobox 
+                      v-model="filter"
+                      label="Filter"
+                      :items="['all', 'completed', 'incomplete']"
+                      @change="filterTodo"
+                    >
+                  </v-combobox>
                 <!--add a search bar-->
-                <form>
-                  <v-text-field
-                    v-model="search"
-                    append-icon="mdi-magnify"
-                    label="Search"
-                    single-line
-                    hide-details
-                  ></v-text-field>
-                  <!--use text entered in search bar to display todo matching the search-->
+                <v-text-field 
+                v-model="search"
+                append-icon="mdi-magnify"
+                label="Search"
+                single-line
+                hide-details
+                ></v-text-field>
+                <!-- <form> -->
+                <!--use text entered in search bar to display todo matching the search-->
                   <v-list-item v-for="todo in searchTodo()" :key="todo.title">
                     <v-list-item-content>
-                      <v-list-item-title font-weight="bold" >[{{todos.indexOf(todo)+1}}] {{ todo.title }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ todo.description }}</v-list-item-subtitle>
+                      <span :class="{completed: todo.completed}"><v-list-item-title font-weight="bold" >[{{todos.indexOf(todo)+1}}] {{ todo.title }}</v-list-item-title>
+                      <v-list-item-subtitle>{{ todo.description }}</v-list-item-subtitle></span>
                       <v-checkbox
                         v-model="todo.completed"
                         :checked="todo.completed"
@@ -38,7 +39,7 @@
                       ></v-checkbox>
                     </v-list-item-content>
                   </v-list-item>
-                </form>
+                <!-- </form> -->
                 </v-list-item-content>
               </v-list-item>
               <form @submit.prevent="addtodo">
@@ -81,7 +82,7 @@
   </template>
 
   <script>
-  import axios from "axios";
+  import axios from 'axios';
   export default {
     data() {
       return {
@@ -92,7 +93,8 @@
           newTodoDesc: "",
           removeTodo: "",
           search: "",
-          filter: "",
+          filterStatus: "all",
+          user_email:this.$store.state.currentUser,
           todos: this.$store.state.todos
       };
     },
@@ -109,17 +111,17 @@
     return
   }
   //get the data from the form and then post on api
-  axios.post('/api/todos', {
-    email: 'leledeadpool@gmail.com',
-    newTodo: {
-      title: this.newTodo,
-      description: this.newTodoDesc,
-      completed: false
-    }
-  })
-  .then(function (response) {
-    console.log('Todo added successfully');
-  });
+    axios.post('/api/todos', {
+      email: this.user_email,
+      newTodo: {
+        title: this.newTodo,
+        description: this.newTodoDesc,
+        completed: false
+      }
+    })
+    .then(function (response) {
+      console.log('Todo added successfully');
+    });
   this.todos = Object.values(this.todos);
   this.todos.push({
     title: this.newTodo,
@@ -138,7 +140,7 @@
         if (this.removeTodo > 0 && this.removeTodo <= this.todos.length){
         axios.delete('/api/todos', {
           data: {
-            email: 'leledeadpool@gmail.com',
+            email: this.user_email,
             newTodo: {
               title: this.todos[this.removeTodo-1].title,
               description: this.todos[this.removeTodo-1].description,
@@ -178,7 +180,7 @@
       markComplete(todo) {
           //use axios to search for the todo and update the completed status
           axios.put('/api/todos', {
-            email: 'leledeadpool@gmail.com',
+            email: this.user_email,
             newTodo: {
               title: todo.title,
               description: todo.description,
@@ -189,11 +191,42 @@
             todo.completed = todo.completed;
           });
   },
+},
+computed: {
+  filter() {
+    if (this.filterStatus === 'completed') {
+        return this.items.filter(item => item.completed)
+      } else if (this.filterStatus === 'incomplete') {
+        return this.items.filter(item => !item.completed)
+      } else {
+        return this.items
+      }
+  }
 }
   };
   </script>
 
+<style>
+  input {
+    padding: 5px;
+    margin-top: 0; 
+    margin-bottom: 0; 
+    display: inline;
+    border-style: none!important;
+  }
+  .v-text-field {
+    border-style: none!important;
+    padding: 5px;
+  }
+  .completed {
+      text-decoration: line-through;
+  }
+  
+  form {
+    height: fit-content;
+  }
 
+</style>
 
   <!-- <script>
   import { mapState, mapActions } from 'vuex';

@@ -25,16 +25,20 @@ export default () => new Vuex.Store({
       console.log("Inside login action", user.email);
       const response = await fetch('/todos.json');
       const data = await response.json();
-      console.log("Fetched data: ", data)
-      console.log("Fetched data: ", data[user.email])
-      console.log("TODO loading: "+ data[user.email]["todo"]);
       commit("SET_CURRENT_USER", {"user":user.email, "todos":data[user.email]["todo"]});
     },
     async logout({ commit }) {
       // perform logout actions and commit CLEAR_CURRENT_USER mutation
       commit("CLEAR_CURRENT_USER");
     },
+    async register({ commit }, user) {
+      try{
+        commit("SET_CURRENT_USER", {"user":user.email, "todos":[]});
+      } catch (error) {
+        console.log(error);
+      }
   },
+},
   getters: {
     isLoggedIn(state) {
       return state.currentUser !== null;
@@ -44,4 +48,3 @@ export default () => new Vuex.Store({
     }
   },
 });
-
