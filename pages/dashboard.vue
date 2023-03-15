@@ -1,7 +1,8 @@
   <!--use frontend components of Vuetify to create a simple dashboard-->
   <template>
-    <v-container>
-      <v-row>
+    <div data-app>
+      <v-container>
+        <v-row>
         <v-col>
           <v-card>
             <v-card-title class="headline">Dashboard</v-card-title>
@@ -10,76 +11,81 @@
                 <v-list-item-content>
                   <v-list-item-title class="title">Welcome to the Dashboard</v-list-item-title>
                   <v-list-item-title class="title">Your ToDo List</v-list-item-title>
-                    <v-combobox 
-                      v-model="filter"
+                  <v-combobox 
+                      v-model="filterStatus"
                       label="Filter"
-                      :items="['all', 'completed', 'incomplete']"
-                      @change="filterTodo"
-                    >
-                  </v-combobox>
-                <!--add a search bar-->
-                <v-text-field 
-                v-model="search"
+                      :items="filterOptions"
+                      >
+                    </v-combobox>
+                    <!--add a search bar-->
+                    <v-text-field 
+                    v-model="search"
                 append-icon="mdi-magnify"
                 label="Search"
                 single-line
                 hide-details
                 ></v-text-field>
                 <!-- <form> -->
-                <!--use text entered in search bar to display todo matching the search-->
+                  <!--use text entered in search bar to display todo matching the search-->
                   <v-list-item v-for="todo in searchTodo()" :key="todo.title">
                     <v-list-item-content>
                       <span :class="{completed: todo.completed}"><v-list-item-title font-weight="bold" >[{{todos.indexOf(todo)+1}}] {{ todo.title }}</v-list-item-title>
-                      <v-list-item-subtitle>{{ todo.description }}</v-list-item-subtitle></span>
-                      <v-checkbox
+                        <v-list-item-subtitle>{{ todo.description }}</v-list-item-subtitle></span>
+                        <v-checkbox
                         v-model="todo.completed"
                         :checked="todo.completed"
                         :label="todo.completed ? 'Completed' : 'Not Completed'"
                         @change="markComplete(todo)"
-                      ></v-checkbox>
+                        ></v-checkbox>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item v-if="todos == null">
+                      <v-list-item-content>
+                      <v-list-item-title font-weight="bold">No todos found</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
-                <!-- </form> -->
+                  <!-- </form> -->
                 </v-list-item-content>
               </v-list-item>
               <form @submit.prevent="addtodo">
-              <v-btn icon type="submit">
+                <v-btn icon type="submit">
                   <v-icon>mdi-plus</v-icon>
-                      </v-btn>
-                      <v-text-field
-                              v-if="showForm"
-                              v-model="newTodo"
-                              label="Add Todo"
-                              single-line
-                              hide-details
-                          ></v-text-field>
-                          <!--another form for description-->
-                          <v-text-field
-                              v-if="showForm"
-                              v-model="newTodoDesc"
-                              label="Add Description"
-                              single-line
-                              hide-details
-                          ></v-text-field>
-                  </form>
-                <form @submit.prevent="removetodo">
-              <v-btn icon @click="removetodo">
-            <v-icon>mdi-minus</v-icon>
-          </v-btn>
-          <v-text-field
-            v-if="showFormID"
-            v-model="removeTodo"
-            label="Enter ID to remove"
-            single-line
+                </v-btn>
+                <v-text-field
+                v-if="showForm"
+                v-model="newTodo"
+                label="Add Todo"
+                single-line
+                hide-details
+                ></v-text-field>
+                <!--another form for description-->
+                <v-text-field
+                v-if="showForm"
+                v-model="newTodoDesc"
+                label="Add Description"
+                single-line
+                hide-details
+                ></v-text-field>
+              </form>
+              <form @submit.prevent="removetodo">
+                <v-btn icon @click="removetodo">
+                  <v-icon>mdi-minus</v-icon>
+                </v-btn>
+                <v-text-field
+                v-if="showFormID"
+                v-model="removeTodo"
+                label="Enter ID to remove"
+                single-line
             hide-details>
           </v-text-field>
-          </form>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </template>
+        </form>
+      </v-card-text>
+    </v-card>
+  </v-col>
+</v-row>
+</v-container>
+</div>
+</template>
 
   <script>
   import axios from 'axios';
@@ -94,6 +100,7 @@
           removeTodo: "",
           search: "",
           filterStatus: "all",
+          filterOptions: ["all", "completed", "not completed"],
           user_email:this.$store.state.currentUser,
           todos: this.$store.state.todos
       };
@@ -160,9 +167,9 @@
 
     searchTodo() {
       let filteredTodos = this.todos;
-      if (this.filter === 'completed') {
+      if (this.filterStatus === 'completed') {
         filteredTodos = filteredTodos.filter(todo => todo.completed);
-        } else if (this.filter === 'not completed') {
+        } else if (this.filterStatus === 'not completed') {
           filteredTodos = filteredTodos.filter(todo => !todo.completed);
         }
       if (this.search) {
@@ -192,17 +199,6 @@
           });
   },
 },
-computed: {
-  filter() {
-    if (this.filterStatus === 'completed') {
-        return this.items.filter(item => item.completed)
-      } else if (this.filterStatus === 'incomplete') {
-        return this.items.filter(item => !item.completed)
-      } else {
-        return this.items
-      }
-  }
-}
   };
   </script>
 
@@ -224,6 +220,7 @@ computed: {
   
   form {
     height: fit-content;
+    display: inline;
   }
 
 </style>
