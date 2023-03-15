@@ -31,7 +31,6 @@
                 <!--use text entered in search bar to display todo matching the search-->
                 <v-list-item v-for="todo in searchTodo()" :key="todo.title">
                   <v-list-item-content>
-                    <!--<v-list-item-title font-weight="bold" >[{{todos.indexOf(todo)+1}}] {{ todo.title }}</v-list-item-title>-->
                     <span :class="{ completed: todo.completed }" id="todo-title">[{{ todos.indexOf(todo)+1}}] {{ todo.title }}</span>
                     <v-list-item-subtitle id="todo-description">{{ todo.description }}</v-list-item-subtitle>
                     <v-checkbox
@@ -131,7 +130,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-//       //create a simple ToDo list for logged in user
         showForm: false,
         showFormID: false,
         newTodo: "",
@@ -142,40 +140,44 @@ export default {
         todos: this.$store.state.todos
     };
   },
-// computed: {
-//     // Instead of using the data from state.todos, use the data from state.todos
-//     todos() {
-//       return this.$store.state.todos;
-//     }
-//   },
+
+  mounted() {
+    if (!this.$store.state.currentUser) {
+      this.$router.push("/");
+    }
+  },
+
 methods: {
+  //addTodo adds new todo to the list via api
   addtodo() {
     this.showForm = true;
-if (!this.newTodo.trim() || !this.newTodoDesc.trim()) {
-  return
-}
-//get the data from the form and then post on api
-axios.post('/api/todos', {
-  email: 'leledeadpool@gmail.com',
-  newTodo: {
+    if (!this.newTodo.trim() || !this.newTodoDesc.trim()) {
+      return
+    }
+    console.log(this.$store.state.currentUser)
+    axios.post('/api/todos', {
+      email: this.$store.state.currentUser,
+      newTodo: {
+      title: this.newTodo,
+      description: this.newTodoDesc,
+      completed: false
+    }
+  })
+  .then(function (response) {
+  console.log('Todo added successfully');
+  });
+  this.todos = Object.values(this.todos);
+  this.todos.push({
     title: this.newTodo,
     description: this.newTodoDesc,
     completed: false
-  }
-})
-.then(function (response) {
-  console.log('Todo added successfully');
-});
-this.todos = Object.values(this.todos);
-this.todos.push({
-  title: this.newTodo,
-  description: this.newTodoDesc,
-  completed: false
-});
-this.newTodo = "";
-this.newTodoDesc = "";
-this.showForm = false;
-    },
+  });
+  this.newTodo = "";
+  this.newTodoDesc = "";
+  this.showForm = false;
+  },
+
+  //removetodo removes todo from the list via api
     removetodo() {
       this.showFormID = true;
       if(this.removeTodo){
@@ -183,7 +185,7 @@ this.showForm = false;
       if (this.removeTodo > 0 && this.removeTodo <= this.todos.length){
       axios.delete('/api/todos', {
         data: {
-          email: 'leledeadpool@gmail.com',
+          email: this.$store.state.currentUser,
           newTodo: {
             title: this.todos[this.removeTodo-1].title,
             description: this.todos[this.removeTodo-1].description,
@@ -200,7 +202,9 @@ this.showForm = false;
       }
     }
   },
-  searchTodo() {
+
+  //searchTodo searches for a todo in the list, and filters the list based on completed status, but is the whole list at the start
+  searchTodo() { 
     let filteredTodos = this.todos;
     if (this.filter === 'completed') {
       filteredTodos = filteredTodos.filter(todo => todo.completed);
@@ -218,10 +222,11 @@ this.showForm = false;
   }
 return filteredTodos;
 },
+
+//markComplete marks a todo as completed via api
     markComplete(todo) {
-        //use axios to search for the todo and update the completed status
         axios.put('/api/todos', {
-          email: 'leledeadpool@gmail.com',
+          email: this.$store.state.currentUser,
           newTodo: {
             title: todo.title,
             description: todo.description,
@@ -235,68 +240,3 @@ return filteredTodos;
 }
 };
 </script>
-
-
-
-<!-- <script>
-import { mapState, mapActions } from 'vuex';
-export default {
-  computed: {
-    ...mapState(['todos']),
-  },
-  data: () => ({
-    newTodo: '',
-    newTodoDesc: '',
-    removeTodo: '',
-    showForm: false,
-    showFormID: false,
-    search: '',
-  }),
-  methods: {
-    ...mapActions(['addTodo', 'removeTodo', 'updateTodo']),
-    addtodo() {
-      this.showForm = !this.showForm;
-      if (this.showForm === false) {
-        if (this.newTodo.trim() !== '') {
-          const newtodo = {
-            title: this.newTodo,
-            description: this.newTodoDesc,
-            completed: false,
-          };
-          this.addTodo({
-            todo: newtodo,
-          });
-          this.newTodo = '';
-          this.newTodoDesc = '';
-        }
-      }
-    },
-    removetodo() {
-      this.showFormID = !this.showFormID;
-      if (this.showFormID === false) {
-        if (this.removeTodo.trim() !== '') {
-          const index = parseInt(this.removeTodo) - 1;
-          if (index >= 0 && index < this.todos.length) {
-            this.removeTodo({
-              todo: this.todos[index],
-            });
-          }
-          this.removeTodo = '';
-        }
-      }
-    },
-    save() {
-      this.todos.forEach((todo) => {
-        this.updateTodo({
-          todo,
-        });
-      });
-    },
-    searchTodo() {
-      return this.todos.filter((todo) =>
-        todo.title.toLowerCase().includes(this.search.toLowerCase())
-      );
-    },
-  },
-};
-</script> -->
