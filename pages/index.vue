@@ -10,6 +10,8 @@
       <input ref="password" type="password" />
     </label>
     <button type="submit">Login</button>
+    Or
+    <button type="button" @click="RegisterUser">Register</button>
     <textarea ref="error"></textarea>
   </form>
 </template>
@@ -47,10 +49,11 @@ button {
 <script>
 import { mapActions } from "vuex";
 import { auth } from "../plugins/firebase";
+import axios from "axios";
 
 export default {
   methods: {
-    ...mapActions(["login"]),
+    ...mapActions(["login", "logout","register"]),
     async PageLogin() {
       const email = this.$refs.email.value;
       const password = this.$refs.password.value;
@@ -62,6 +65,41 @@ export default {
         await this.login({ email })
         console.log(usercreds);
         this.$router.push("/dashboard");
+      } catch (error) {
+        this.$refs.error.value = error;
+        console.log(error);
+      }
+    },
+    async PageLogout() {
+      try {
+        await auth.signOut();
+        this.$router.push("/");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async RegisterUser() {
+      const email = this.$refs.email.value;
+      const password = this.$refs.password.value;
+      console.log("email, password: ", email, password);
+      try {
+        console.log("Registering user with email: " + email);
+        const usercreds = await auth.createUserWithEmailAndPassword(
+          email,
+          password
+        );
+        console.log("User registered....");
+        console.log(usercreds);
+        await this.register({ email })
+        let self=this;
+        axios.put('/api/new', {
+          email: email
+        }).then(function (response) {
+          console.log(response);
+          self.$router.push("/dashboard");
+        }).catch(function (error) {
+          console.log(error);
+        });
       } catch (error) {
         this.$refs.error.value = error;
         console.log(error);
