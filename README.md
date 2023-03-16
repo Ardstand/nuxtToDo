@@ -4,17 +4,17 @@ A web application assignment by Reluminous Technologies to have the ability to c
 
 [![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://nodejs.org/en/) [![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF)](https://vuetifyjs.com/en/) [![Nuxtjs](https://img.shields.io/badge/Nuxt-002E3B?style=for-the-badge&logo=nuxtdotjs&logoColor=#00DC82)](https://nuxtjs.org/)
 
-_**[Click here for live server](https://testing.com)**_
+_**[Click here for live server](http://nuxttodo.ddns.net/)**_
 
 # Table of contents
 
-1. [Feature Requirements](#feature-requirements)
-2. [Software Requirements](#software-requirements)
-3. [Assumptions](#assumptions)
-4. [Implementation](#implementation)
-5. [What could be better](#what-could-be-better)
-6. [License](#license)
-7. [Authors](#authors)
+1. [Feature Requirements](#feature-requirements) 🧾
+2. [Software Requirements](#software-requirements) 💻
+3. [Assumptions](#assumptions) 🤔
+4. [Implementation](#implementation) ⚙
+5. [What could be better](#what-could-be-better) 💡
+6. [License](#license) ©
+7. [Authors](#authors) ✒
 
 ## Feature Requirements
 
@@ -29,14 +29,14 @@ Features required in Todo App are:
 
 ## Software Requirements
 
-1. Node.js (Nuxt.js & Vuetify)
+1. **Node.js** (Nuxt.js & Vuetify)
     - axios@0.27.2
     - fs@latest
-2. Operating System (Linux-based or Windows)
+2. **Operating System** (Linux-based or Windows)
 
 ## Assumptions
 
-These were assumptions made during the development of the website by the [developers](#authors)
+These were assumptions made during the development of the website by the _[developers](#authors)_
 1. Any backend storage system can be used, including `json`. This is not recommended for live active running websites.
 2. UI Design is not a priority and certainly not a necessity.
 3. State information need not be persistent. No cookies will be stored.
