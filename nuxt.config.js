@@ -3,8 +3,8 @@ import colors from 'vuetify/es5/util/colors'
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    titleTemplate: '%s - nuxtass1',
-    title: 'nuxtass1',
+    titleTemplate: '%s - nuxtToDo',
+    title: 'nuxtToDo',
     htmlAttrs: {
       lang: 'en'
     },
@@ -63,5 +63,10 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  //you could add server: for build
+  server: {
+    port: 3000,
+    host: 'localhost',
   }
 }
