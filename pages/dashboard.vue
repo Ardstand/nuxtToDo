@@ -13,8 +13,8 @@
                   <v-list-item-title class="title">Your ToDo List</v-list-item-title>
                   <v-combobox 
                       v-model="filterStatus"
-                      label="Filter"
                       :items="filterOptions"
+                      :value="'all'"
                       >
                     </v-combobox>
                     <!--add a search bar-->
@@ -67,6 +67,7 @@
                 hide-details
                 ></v-text-field>
               </form>
+              <!--another form for removing a todo-->
               <form @submit.prevent="removetodo">
                 <v-btn icon @click="removetodo">
                   <v-icon>mdi-minus</v-icon>
@@ -92,7 +93,6 @@
   export default {
     data() {
       return {
-  //       //create a simple ToDo list for logged in user
           showForm: false,
           showFormID: false,
           newTodo: "",
@@ -105,12 +105,13 @@
           todos: this.$store.state.todos
       };
     },
-  // computed: {
-  //     // Instead of using the data from state.todos, use the data from state.todos
-  //     todos() {
-  //       return this.$store.state.todos;
-  //     }
-  //   },
+
+    mounted() {
+    if (!this.$store.state.currentUser) {
+      this.$router.push("/");
+    }
+    },
+
   methods: {
     addtodo() {
       this.showForm = true;
@@ -224,67 +225,3 @@
   }
 
 </style>
-
-  <!-- <script>
-  import { mapState, mapActions } from 'vuex';
-
-  export default {
-    computed: {
-      ...mapState(['todos']),
-    },
-    data: () => ({
-      newTodo: '',
-      newTodoDesc: '',
-      removeTodo: '',
-      showForm: false,
-      showFormID: false,
-      search: '',
-    }),
-    methods: {
-      ...mapActions(['addTodo', 'removeTodo', 'updateTodo']),
-      addtodo() {
-        this.showForm = !this.showForm;
-        if (this.showForm === false) {
-          if (this.newTodo.trim() !== '') {
-            const newtodo = {
-              title: this.newTodo,
-              description: this.newTodoDesc,
-              completed: false,
-            };
-            this.addTodo({
-              todo: newtodo,
-            });
-            this.newTodo = '';
-            this.newTodoDesc = '';
-          }
-        }
-      },
-      removetodo() {
-        this.showFormID = !this.showFormID;
-        if (this.showFormID === false) {
-          if (this.removeTodo.trim() !== '') {
-            const index = parseInt(this.removeTodo) - 1;
-            if (index >= 0 && index < this.todos.length) {
-              this.removeTodo({
-                todo: this.todos[index],
-              });
-            }
-            this.removeTodo = '';
-          }
-        }
-      },
-      save() {
-        this.todos.forEach((todo) => {
-          this.updateTodo({
-            todo,
-          });
-        });
-      },
-      searchTodo() {
-        return this.todos.filter((todo) =>
-          todo.title.toLowerCase().includes(this.search.toLowerCase())
-        );
-      },
-    },
-  };
-  </script> -->
