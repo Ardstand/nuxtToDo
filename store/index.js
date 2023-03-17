@@ -11,9 +11,7 @@ export default () => new Vuex.Store({
   mutations: {
     SET_CURRENT_USER(state, payload) {
       state.currentUser = payload.user;
-      console.log("Inside SET_CURRENT_USER mutation", payload.user);
       state.todos = payload.todos;
-      console.log("Inside SET_CURRENT_USER mutation", payload.todos);
     },
     CLEAR_CURRENT_USER(state) {
       state.currentUser = null;
@@ -22,7 +20,6 @@ export default () => new Vuex.Store({
   },
   actions: {
     async login({ commit }, user) {
-      console.log("Inside login action", user.email);
       const response = await fetch('/todos.json');
       const data = await response.json();
       commit("SET_CURRENT_USER", {"user":user.email, "todos":data[user.email]["todo"]});

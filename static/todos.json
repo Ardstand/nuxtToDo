@@ -1,1 +1,42 @@
-{"emmanuel.smiju16525@gmail.com":{"name":"Emmanuel Smiju","todo":[{"title":"Title 1","completed":true,"description":"Description for 1"},{"title":"Title 2","completed":false,"description":"Description for 2"}]},"leledeadpool@gmail.com":{"name":"Vash Motwani","todo":[{"title":"Title1","description":"Description1","completed":true}]},"525@gmail.com":{"todo":[]},"em5@gmail.com":{"todo":[]},"nolifewastaken@gmail.com":{"todo":[{"title":"ssss","description":"bbbb","completed":false}]}}
+{
+    "emmanuel.smiju16525@gmail.com": {
+        "name": "Emmanuel Smiju",
+        "todo": [
+            {
+                "title": "Title 1",
+                "completed": true,
+                "description": "Description for 1"
+            },
+            {
+                "title": "Title 2",
+                "completed": false,
+                "description": "Description for 2"
+            }
+        ]
+    },
+    "leledeadpool@gmail.com": {
+        "name": "Vash Motwani",
+        "todo": [
+            {
+                "title": "Title1",
+                "description": "Description1",
+                "completed": true
+            }
+        ]
+    },
+    "525@gmail.com": {
+        "todo": []
+    },
+    "em5@gmail.com": {
+        "todo": []
+    },
+    "nolifewastaken@gmail.com": {
+        "todo": [
+            {
+                "title": "ssss",
+                "description": "bbbb",
+                "completed": false
+            }
+        ]
+    }
+}
