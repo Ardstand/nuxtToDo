@@ -4,7 +4,7 @@ A web application assignment by Reluminous Technologies to have the ability to c
 
 [![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)](https://nodejs.org/en/) [![Vuetify](https://img.shields.io/badge/Vuetify-1867C0?style=for-the-badge&logo=vuetify&logoColor=AEDDFF)](https://vuetifyjs.com/en/) [![Nuxtjs](https://img.shields.io/badge/Nuxt-002E3B?style=for-the-badge&logo=nuxtdotjs&logoColor=#00DC82)](https://nuxtjs.org/)
 
-_**[Click here for live server](http://15.235.166.195:3000/)**_
+_**[Click here for live server](http://nuxttodo.ddns.net/)**_
 
 # Table of contents
 
