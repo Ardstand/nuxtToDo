@@ -25,10 +25,11 @@ export default async (req, res) => {
         const index = todos[email].todo.findIndex(t => t.title === newTodo.title);
         if (index !== -1) {
           todos[email].todo[index].completed = newTodo.completed;
+        } else {
+          todos[email].todo.push(newTodo);
         }
       }
     }
-
         // If the request method is POST, add the todo to the user's todos array
         if (req.method === 'POST') {
             if(req.body === undefined || Object.keys(req.body).length === 0) {

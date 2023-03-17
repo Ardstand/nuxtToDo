@@ -1,95 +1,154 @@
-  <!--use frontend components of Vuetify to create a simple dashboard-->
-  <template>
-    <div data-app>
-      <v-container>
-        <v-row>
-        <v-col>
-          <v-card>
-            <v-card-title class="headline">Dashboard</v-card-title>
-            <v-card-text>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title class="title">Welcome to the Dashboard</v-list-item-title>
-                  <v-list-item-title class="title">Your ToDo List</v-list-item-title>
-                  <v-combobox 
-                      v-model="filterStatus"
-                      :items="filterOptions"
-                      :value="'all'"
-                      >
-                    </v-combobox>
-                    <!--add a search bar-->
-                    <v-text-field 
-                    v-model="search"
-                append-icon="mdi-magnify"
-                label="Search"
-                single-line
-                hide-details
-                ></v-text-field>
-                <!-- <form> -->
-                  <!--use text entered in search bar to display todo matching the search-->
-                  <v-list-item v-for="todo in searchTodo()" :key="todo.title">
-                    <v-list-item-content>
-                      <span :class="{completed: todo.completed}"><v-list-item-title font-weight="bold" >[{{todos.indexOf(todo)+1}}] {{ todo.title }}</v-list-item-title>
-                        <v-list-item-subtitle>{{ todo.description }}</v-list-item-subtitle></span>
-                        <v-checkbox
-                        v-model="todo.completed"
-                        :checked="todo.completed"
-                        :label="todo.completed ? 'Completed' : 'Not Completed'"
-                        @change="markComplete(todo)"
-                        ></v-checkbox>
-                      </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item v-if="todos == null">
-                      <v-list-item-content>
-                      <v-list-item-title font-weight="bold">No todos found</v-list-item-title>
-                    </v-list-item-content>
-                  </v-list-item>
-                  <!-- </form> -->
-                </v-list-item-content>
-              </v-list-item>
-              <form @submit.prevent="addtodo">
-                <v-btn icon type="submit">
-                  <v-icon>mdi-plus</v-icon>
-                </v-btn>
+<!--use vue frontent components to create a todo list as a table and have a gradient background and should look appealing and clean-->
+<template>
+  <v-container id="app" data-app>
+    <v-row>
+      <v-col>
+        <v-card class="elevation-12">
+          <v-toolbar color="primary" dark flat>
+            <v-toolbar-title>Todo List</v-toolbar-title>
+            <v-spacer></v-spacer>
+          </v-toolbar>
+          <v-card-text>
+            <v-text-field
+              v-model="search"
+              id="searchList"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-text>
+          <v-card-text>
+          <v-combobox
+            v-model="filterStatus"
+            id="searchList"
+            :items="filterOptions"
+            :value="'all'"
+          ></v-combobox>
+          </v-card-text>
+          <v-card-text>
+            <v-data-table
+              :headers="headers"
+              :items="filteredTodos"
+              :search="search"
+              :items-per-page="5"
+              class="elevation-1"
+            >
+            <template v-slot:item.completed="{ item }">
+      <v-btn icon @click="markComplete(item)">
+    <v-icon v-if="item.completed" color="green">
+      mdi-check
+    </v-icon>
+      <v-icon v-else color="red">
+        mdi-close
+          </v-icon>
+            </v-btn>
+              </template>
+              <template v-slot:item.actions="{ item }">
+  <v-icon small v-if="item" @click="removeItem(item)">
+    mdi-delete
+  </v-icon>
+</template>
+            </v-data-table>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn
+              @click="showForm = true"
+            >
+              Add Todo
+            </v-btn>
+            <v-btn
+              @click="logOut()"
+            >
+              Logout
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-snackbar
+      v-model="snackbar"
+    >
+      {{ text }}
+      <v-btn
+        color="pink"
+        text
+        @click="snackbar = false"
+      >
+        Close
+      </v-btn>
+    </v-snackbar>
+    <v-dialog
+      v-model="showForm"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-title>
+          <span class="headline">Add Todo</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
                 <v-text-field
-                v-if="showForm"
-                v-model="newTodo"
-                label="Add Todo"
-                single-line
-                hide-details
+                  v-model="newTodo"
+                  id="searchList"
+                  label="Title"
                 ></v-text-field>
-                <!--another form for description-->
+              </v-col>
+              <v-col cols="12">
                 <v-text-field
-                v-if="showForm"
-                v-model="newTodoDesc"
-                label="Add Description"
-                single-line
-                hide-details
+                  v-model="newTodoDesc"
+                  id="searchList"
+                  label="Description"
                 ></v-text-field>
-              </form>
-              <!--another form for removing a todo-->
-              <form @submit.prevent="removetodo">
-                <v-btn icon @click="removetodo">
-                  <v-icon>mdi-minus</v-icon>
-                </v-btn>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="showForm = false"
+          >
+            Cancel
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="addtodo"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog
+      v-model="showFormID"
+      max-width="500px"
+    >
+      <v-card>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
                 <v-text-field
-                v-if="showFormID"
-                v-model="removeTodo"
-                label="Enter ID to remove"
-                single-line
-            hide-details>
-          </v-text-field>
-        </form>
-      </v-card-text>
-    </v-card>
-  </v-col>
-</v-row>
-</v-container>
-</div>
+                  v-model="removeTodo"
+                  label="ID"
+                ></v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
   <script>
-  import axios from 'axios';
+  import todoList from "../components/todoList.js";
   export default {
     data() {
       return {
@@ -100,9 +159,23 @@
           removeTodo: "",
           search: "",
           filterStatus: "all",
+          colors: ['red', 'blue', 'green', 'yellow'],
           filterOptions: ["all", "completed", "not completed"],
           user_email:this.$store.state.currentUser,
-          todos: this.$store.state.todos
+          todos: this.$store.state.todos,
+          headers: [
+            {
+              text: "Title",
+              align: "start",
+              sortable: false,
+              value: "title"
+            },
+            { text: "Description", value: "description" },
+            { text: "Completed", value: "completed" },
+            { text: "Actions", align: "center", value: "actions", sortable: false}
+          ],
+          snackbar: false,
+          text: "",
       };
     },
 
@@ -112,116 +185,71 @@
     }
     },
 
-  methods: {
-    addtodo() {
-      this.showForm = true;
-  if (!this.newTodo.trim() || !this.newTodoDesc.trim()) {
-    return
-  }
-  //get the data from the form and then post on api
-    axios.post('/api/todos', {
-      email: this.user_email,
-      newTodo: {
-        title: this.newTodo,
-        description: this.newTodoDesc,
-        completed: false
-      }
-    })
-    .then(function (response) {
-      console.log('Todo added successfully');
-    });
-  this.todos = Object.values(this.todos);
-  this.todos.push({
-    title: this.newTodo,
-    description: this.newTodoDesc,
-    completed: false
-  });
-  this.newTodo = "";
-  this.newTodoDesc = "";
-  this.showForm = false;
-      },
-
-      removetodo() {
-        this.showFormID = true;
-        if(this.removeTodo){
-          this.removeTodo = parseInt(this.removeTodo);  
-        if (this.removeTodo > 0 && this.removeTodo <= this.todos.length){
-        axios.delete('/api/todos', {
-          data: {
-            email: this.user_email,
-            newTodo: {
-              title: this.todos[this.removeTodo-1].title,
-              description: this.todos[this.removeTodo-1].description,
-              completed: this.todos[this.removeTodo-1].completed
-            }
-        }
-        })
-        this.todos.splice(this.removeTodo-1, 1);
-        this.removeTodo = "";
-        this.showFormID = false;
-        }
-        else{
-          alert("Please enter a valid ID");
+    computed: {
+      filteredTodos() {
+        if (this.filterStatus === "all") {
+          return this.todos;
+        } else if (this.filterStatus === "completed") {
+          return this.todos.filter(todo => todo.completed);
+        } else if (this.filterStatus === "not completed") {
+          return this.todos.filter(todo => !todo.completed);
         }
       }
     },
 
-    searchTodo() {
-      let filteredTodos = this.todos;
-      if (this.filterStatus === 'completed') {
-        filteredTodos = filteredTodos.filter(todo => todo.completed);
-        } else if (this.filterStatus === 'not completed') {
-          filteredTodos = filteredTodos.filter(todo => !todo.completed);
-        }
-      if (this.search) {
-        let matchTodos = [];
-        for (let i = 0; i < filteredTodos.length; i++) {
-        if (filteredTodos[i].title.toLowerCase().includes(this.search.toLowerCase())) {
-          matchTodos.push(filteredTodos[i]);
-        }
-      }
-      return matchTodos;
-    }
-  return filteredTodos;
-},
+  methods: {
+    addtodo(){
+      todoList.addNewTodo(this.newTodo, this.newTodoDesc, this.user_email);
+      this.todos = Object.values(this.todos);
+      this.todos.push({
+      title: this.newTodo,
+      description: this.newTodoDesc,
+      completed: false
+      });
+      this.newTodo = "";
+      this.newTodoDesc = "";
+      this.showForm = false;
+      },
 
-      markComplete(todo) {
-          //use axios to search for the todo and update the completed status
-          axios.put('/api/todos', {
-            email: this.user_email,
-            newTodo: {
-              title: todo.title,
-              description: todo.description,
-              completed: todo.completed
-            }
-          })
-          .then(function (response) {
-            todo.completed = todo.completed;
-          });
-  },
-},
-  };
-  </script>
+  removeItem(item) {
+    let filteredTodos = this.searchTodo();
+    todoList.removeOldTodo(filteredTodos, item, this.user_email);
+    },
+    
+  markComplete(todo) {
+  todoList.markTodoComplete(todo, this.user_email);
+    },
+
+  searchTodo() {
+    let filteredTodos = this.todos;
+    if (this.filterStatus === 'completed') {
+      filteredTodos = filteredTodos.filter(todo => todo.completed);
+      } else if (this.filterStatus === 'not completed') {
+        filteredTodos = filteredTodos.filter(todo => !todo.completed);
+      }
+    if (this.search) {
+      let matchTodos = [];
+         for (let i = 0; i < filteredTodos.length; i++) {
+         if (filteredTodos[i].title.toLowerCase().includes(this.search.toLowerCase())) {
+          matchTodos.push(filteredTodos[i]);
+         }
+        }
+       return matchTodos;
+      }
+      return filteredTodos;
+    },
+
+    logOut() {
+      this.$router.push("/");
+  }
+  }
+};
+</script>
 
 <style>
-  input {
+#searchList {
     padding: 5px;
-    margin-top: 0; 
-    margin-bottom: 0; 
-    display: inline;
-    border-style: none!important;
+    margin: 10px;
+    border-style: none!important;;
   }
-  .v-text-field {
-    border-style: none!important;
-    padding: 5px;
-  }
-  .completed {
-      text-decoration: line-through;
-  }
-  
-  form {
-    height: fit-content;
-    display: inline;
-  }
-
 </style>
