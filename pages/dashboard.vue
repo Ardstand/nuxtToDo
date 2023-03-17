@@ -186,7 +186,17 @@
     },
 
     computed: {
+      computedOptions(){
+        try {
+          return this.todos.map(todo => todo.title);
+        } catch (error) {
+          return [];
+        }
+      },
+
       filteredTodos() {
+        if(this.todos)
+        {
         if (this.filterStatus === "all") {
           return this.todos;
         } else if (this.filterStatus === "completed") {
@@ -195,7 +205,11 @@
           return this.todos.filter(todo => !todo.completed);
         }
       }
-    },
+      else {
+        this.$router.push("/");
+      }
+    }
+  },
 
   methods: {
     addtodo(){
