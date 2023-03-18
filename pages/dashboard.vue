@@ -3,10 +3,15 @@
   <v-container id="app" data-app>
     <v-row>
       <v-col>
-        <v-card class="elevation-12">
-          <v-toolbar color="primary" dark flat>
+        <v-card class="elevation-12" :dark="darkMode">
+          <v-toolbar color="primary" dark :flat="!darkMode">
             <v-toolbar-title>Todo List</v-toolbar-title>
             <v-spacer></v-spacer>
+            <v-switch
+              v-model="darkMode"
+              :label="darkMode ? 'Dark Mode' : 'Light Mode'"
+              :inset=true
+            />
           </v-toolbar>
           <v-card-text>
             <v-text-field
@@ -34,21 +39,45 @@
               :items-per-page="5"
               class="elevation-1"
             >
-            <template v-slot:item.completed="{ item }">
-      <v-btn icon @click="markComplete(item)">
-    <v-icon v-if="item.completed" color="green">
-      mdi-check
-    </v-icon>
-      <v-icon v-else color="red">
-        mdi-close
-          </v-icon>
-            </v-btn>
+              <template v-slot:item.title="{ item }">
+                <div :class="{'completed':item.completed}">
+                  {{ item.title }}
+                </div>
               </template>
+              <template v-slot:item.description="{ item }">
+                <div v-if="item.completed" class="completed">
+                  {{ item.description }}
+                </div>
+                <div v-else>
+                  {{ item.description }}
+                </div>
+              </template>
+              <template v-slot:item.completed="{ item }">
+                <div v-if="item.completed">
+                  <v-btn icon @click="markComplete(item)">
+                    <v-icon>
+                      mdi-check
+                    </v-icon>
+                  </v-btn>
+                  Completed
+                </div>
+                <div v-else>
+                  <v-btn icon @click="markComplete(item)">
+                    <v-icon>
+                      mdi-close
+                      </v-icon>
+                    </v-btn>
+                       Not Completed
+                    </div>
+                </template>
               <template v-slot:item.actions="{ item }">
-  <v-icon small v-if="item" @click="removeItem(item)">
-    mdi-delete
-  </v-icon>
-</template>
+                <div v-if="item">
+                  <v-icon small @click="removeItem(item)">
+                    mdi-delete
+                  </v-icon> 
+                  Delete
+                </div>
+              </template>
             </v-data-table>
           </v-card-text>
           <v-card-actions>
@@ -147,8 +176,9 @@
   </v-container>
 </template>
 
-  <script>
+<script>
   import todoList from "../components/todoList.js";
+  import { mapActions } from "vuex";
   export default {
     data() {
       return {
@@ -176,6 +206,7 @@
           ],
           snackbar: false,
           text: "",
+          darkMode: false
       };
     },
 
@@ -212,6 +243,7 @@
   },
 
   methods: {
+    ...mapActions(["logout"]),
     addtodo(){
       todoList.addNewTodo(this.newTodo, this.newTodoDesc, this.user_email);
       this.todos = Object.values(this.todos);
@@ -254,6 +286,7 @@
     },
 
     logOut() {
+      this.logout();
       this.$router.push("/");
   }
   }
@@ -265,5 +298,9 @@
     padding: 5px;
     margin: 10px;
     border-style: none!important;;
+  }
+.completed {
+    text-decoration: line-through;
+    color: grey;
   }
 </style>

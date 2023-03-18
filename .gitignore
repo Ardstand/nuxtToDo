@@ -94,4 +94,4 @@ config
 
 # Test files
 _*
-dashboard_backup.vue
+static/todos.json

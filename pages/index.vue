@@ -53,17 +53,13 @@ import axios from "axios";
 
 export default {
   methods: {
-    ...mapActions(["login", "logout","register"]),
+    ...mapActions(["login", "register"]),
     async PageLogin() {
       const email = this.$refs.email.value;
       const password = this.$refs.password.value;
-      console.log("email, password: ", email, password);
       try {
-        console.log("Signing in user with email: " + email);
         const usercreds = await auth.signInWithEmailAndPassword(email, password);
-        console.log("User signed in....");
         await this.login({ email })
-        console.log(usercreds);
         this.$router.push("/dashboard");
       } catch (error) {
         this.$refs.error.value = error;
@@ -81,21 +77,16 @@ export default {
     async RegisterUser() {
       const email = this.$refs.email.value;
       const password = this.$refs.password.value;
-      console.log("email, password: ", email, password);
       try {
-        console.log("Registering user with email: " + email);
         const usercreds = await auth.createUserWithEmailAndPassword(
           email,
           password
         );
-        console.log("User registered....");
-        console.log(usercreds);
         await this.register({ email })
         let self=this;
         axios.put('/api/new', {
           email: email
         }).then(function (response) {
-          console.log(response);
           self.$router.push("/dashboard");
         }).catch(function (error) {
           console.log(error);

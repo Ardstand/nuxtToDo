@@ -36,7 +36,6 @@ export default async (req, res) => {
                 return;
             }
             if(todos[email]) {
-            console.log(newTodo);
             todos[email].todo.push(newTodo);
             }
         }
